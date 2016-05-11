@@ -1,0 +1,13 @@
+{
+  "name": "go-ahead-route-learning",
+  "version": "0.0.0",
+  "devDependencies": {
+    "js-yaml": "^3.6.0"
+  },
+  "scripts": {
+    "data2json:yaml": "js-yaml data/bus-stops.yaml >> js/bus-stops.js",
+    "data2json:pre": "echo 'MYAPP.busStops =' > js/bus-stops.js",
+    "data2json:post": "echo ';' >> js/bus-stops.js",
+    "data2json": "npm run data2json:pre && npm run data2json:yaml && npm run data2json:post"
+  }
+}
