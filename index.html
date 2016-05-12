@@ -13,6 +13,9 @@
     <!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAflP6BsBmVPmTYaWh1byTWNC5yHQwYFmI&libraries=places"></script>-->
 
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <script language="javascript" src="http://code.jquery.com/jquery-2.2.3.min.js"></script>
 
     <script language="javascript" src="js/main.js"></script>
     <script language="javascript" src="js/config.js"></script>
@@ -26,13 +29,17 @@
       }
 
     </script>
-</head>
+  </head>
 
-<body onload="initialize()">
-  <div id="map_canvas"></div>
-  <div id="question"></div>
-  <div id="answers"></div>
-  <div id="route"></div>
-</body>
+  <body onload="initialize()">
+    <div cass="container">
+      <div class="row">
+        <div id="map_canvas" class="col-xs-12"></div>
+        <div id="question" class="col-xs12"></div>
+        <div id="answers" class="col-xs-12"></div>
+        <div id="route" class="col-xs-12"></div>
+      </div>
+    </div>
+  </body>
 
 </html>

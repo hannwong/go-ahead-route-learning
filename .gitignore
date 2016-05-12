@@ -4,5 +4,11 @@
 # config file, to be written by configurer.
 /js/config.js
 
-# Contains needs tools, like js-yaml.
+# Contains needed tools, like js-yaml.
 /node_modules
+
+# Bootstrap
+/bootstrap/css
+/bootstrap/js
+/css/bootstrap.min.css
+/js/bootstrap.min.js
