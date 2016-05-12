@@ -11,6 +11,18 @@ MYAPP.locations = {
   }
 };
 
+// Stores all polygons drawn on map.
+// To be removed one by one. SD doesn't have a "clear all".
+MYAPP.polygons = [];
+
+// Standard route line style
+MYAPP.lineOptions = {
+  color: "#FF0000",
+  size: 3,
+  opacity: 0.5,
+  fillOpacity: 0
+};
+
 MYAPP.init = function() {
   this.selectedRoute = this.busRoutes["354"];
   var location = this.selectedRoute.start;
@@ -35,8 +47,9 @@ MYAPP.init = function() {
     service.nearbySearch(request, this.busStopsCallback);
   }
 
-  // Generate SD map.
   var latlng = new GeoPoint(this.lng, this.lat);
+
+  // Generate SD map.
   var myOptions = {
     zoom: 13,
     center: latlng,
@@ -104,33 +117,87 @@ MYAPP.busStopsCallback = (function(results, status) {
 MYAPP.lineToStopOffset = {lat: 0.00015, lng: 0.000015}
 
 MYAPP.playQuiz = function(routeName) {
-  route = this.busRoutes[routeName];
-
   MYAPP.quizPosition = 0;
-  // Draw bus stop icon at start of route.
-  var busStopIcon = 'images/Bus_stop_symbol.svg';
-  var marker = this.markerManager.add({
-    position: new GeoPoint(route.start.lng, route.start.lat),
-    map: this.map,
-    icon: busStopIcon
-  });
+  this.playQuizQuestion(routeName, this.quizPosition);
+};
+
+MYAPP.playQuizQuestion = function(routeName, quizPosition) {
+  var route = this.busRoutes[routeName];
+  var segment = route.segments[this.quizPosition];
+
+  var startLng = route.start.lng;
+  var startLat = route.start.lat;
+
+  this.markerManager.clear(); // Clear all markers.
+  // Clear all polygons.
+  for (i = 0; i < this.polygons.length; i++) {
+    this.polylineManager.remove(this.polygons[i]);
+  }
+  this.polygons = [];
+
+  var lastSegment = [];
+  if (this.quizPosition > 0) {
+    // Calculate current position by summing up all the correct answers thus far.
+    for (var i = 0; i < this.quizPosition; i++) {
+      var priorSegment = route.segments[i];
+      var paths = priorSegment.answers[priorSegment.answer];
+
+      if (i == this.quizPosition - 1) {
+        // Will be drawing the last segment in translucent black.
+
+        // Take the beginning of the last path.
+        var lastLat = startLat + this.lineToStopOffset.lat;
+        var lastLng = startLng + this.lineToStopOffset.lng;
+        lastSegment.push({y: lastLat, x: lastLng});
+
+        for (var j = 0; j < paths.length; j++) {
+          var offset = paths[j];
+          lastLat += offset.lat;
+          lastLng += offset.lng;
+          lastSegment.push({y: lastLat, x: lastLng});
+        }
+      }
+
+      for (var j = 0; j < paths.length; j++) {
+        startLng += paths[j].lng;
+        startLat += paths[j].lat;
+      }
+    }
+  }
+
+  // Draw lastSegment
+  if (lastSegment.length > 0) {
+    console.log(lastSegment);
+    var lineOptions = JSON.parse(JSON.stringify(this.lineOptions));
+    lineOptions.color = "#000000";
+    lineOptions.opacity = 0.3;
+    this.polygons.push(this.polylineManager.add(lastSegment, lineOptions));
+  }
+
+  var latlng = new GeoPoint(startLng, startLat);
+  this.map.setCenter(latlng, 13);
+
+  if (0 == quizPosition) {
+    // Draw bus stop icon at start of route.
+    var busStopIcon = 'images/Bus_stop_symbol.svg';
+    var marker = this.markerManager.add({
+      position: new GeoPoint(route.start.lng, route.start.lat),
+      map: this.map,
+      icon: busStopIcon
+    });
+  }
 
   // Display route.
   var div = document.getElementById("route");
   div.innerHTML = "Route: " + routeName;
 
-  var segment = route.segments[this.quizPosition];
   var div = document.getElementById("question");
   if ("route" == segment.questionType) {
     div.innerHTML = "Which route to take?";
 
     // Display possible answers
-    var lineOptions = {
-      color: "#FF0000",
-      size: 3,
-      opacity: 0.5,
-      fillOpacity: 0
-    };
+    var lineOptions = JSON.parse(JSON.stringify(this.lineOptions));
+
     // Starting with route lines...
     for (var i = 0; i < segment.answers.length; i++) {
       var option = segment.answers[i];
@@ -144,8 +211,8 @@ MYAPP.playQuiz = function(routeName) {
       }
 
       var points = [];
-      var lat = route.start.lat + this.lineToStopOffset.lat;
-      var lng = route.start.lng + this.lineToStopOffset.lng;
+      var lat = startLat + this.lineToStopOffset.lat;
+      var lng = startLng + this.lineToStopOffset.lng;
       points.push({y: lat, x: lng});
 
       for (var j = 0; j < option.length; j++) {
@@ -155,7 +222,8 @@ MYAPP.playQuiz = function(routeName) {
         points.push({y: lat, x: lng});
       }
 
-      this.polylineManager.add(points, lineOptions);
+      // Add the polygon, and store it for later deletion.
+      this.polygons.push(this.polylineManager.add(points, lineOptions));
     }
     // Then with buttons...
     var div = document.getElementById("answers");
@@ -180,7 +248,8 @@ MYAPP.answerQuiz = function(optionNumber, routeName) {
   route = this.busRoutes[routeName];
   var segment = route.segments[this.quizPosition];
   if (optionNumber == segment.answer) {
-    console.log("You got it right!");
+    this.quizPosition++;
+    this.playQuizQuestion(routeName, this.quizPosition);
   }
   else {
     $('#myModal').modal('show');

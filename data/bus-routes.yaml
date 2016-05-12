@@ -18,7 +18,6 @@
                   lng: 0.0005
 
             -
-
                 - lat: 0.00040
                   lng: 0.00012
 
@@ -30,16 +29,29 @@
 
           answer: 0
 
-        - question: "Left, Straight or Right?"
-          route:
-            - lat: 0.00049
-              lng: 0.00009
+        - questionType: route
+          answers:
+            -
+                - lat: 0.00001
+                  lng: 0.000235
 
-            - lat: -0.00008
-              lng: 0.0005
+                - lat: -0.003
+                  lng: 0.00001
 
-            - lat: -0.00003
-              lng: 0.0005
+            -
+                - lat: 0.00003
+                  lng: 0.0005
+
+                - lat: 0.00006
+                  lng: 0.0005
+
+                - lat: 0.00006
+                  lng: 0.0005
+
+                - lat: 0.00007
+                  lng: 0.0005
+
+          answer: 1
 
         - question: "Where is the bus stop?"
           route:
