@@ -42,7 +42,7 @@ MYAPP.init = function() {
     zoom: 13,
     center: latlng,
     showCopyright: false,
-    draggable: true
+    draggable: false
   };
   this.map = new SD.genmap.Map(
     document.getElementById("map_canvas"),

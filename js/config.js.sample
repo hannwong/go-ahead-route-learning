@@ -1,1 +1,1 @@
-MYAPP.showGoogleMapBusStops = true;
+MYAPP.showGoogleMapBusStops = false;
