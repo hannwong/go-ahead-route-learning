@@ -14,17 +14,17 @@ MYAPP.locations = {
 MYAPP.init = function() {
   var location = this.locations["Pasir Ris Interchange"];
   // var location = this.locations["Bedok Interchange"];
+  var location = this.busStops["354"][10];
   this.lat = location.lat;
   this.lng = location.lng;
 
-  // We don't want to display the Google Map.
-  // Just need it to invoke the Places API.
-  googleMap = new google.maps.Map(document.createElement('div'), {
-    center: {lat: -35, lng: 150},
-    zoom: 14
-  });
-
   if (true == this.showGoogleMapBusStops) {
+    // We don't want to display the Google Map.
+    // Just need it to invoke the Places API.
+    googleMap = new google.maps.Map(document.createElement('div'), {
+      center: {lat: -35, lng: 150},
+      zoom: 14
+    });
     // Get Google Map to show us bus stops around our location.
     center = new google.maps.LatLng(this.lat, this.lng);
     var request = {
@@ -65,6 +65,7 @@ MYAPP.addBusStops = function() {
       marker = this.markerManager.add({
         position: new GeoPoint(busStop.lng, busStop.lat),
         map: this.map,
+        title: this.busStops[String(routes[i])][j].ID,
         icon: busStopIcon
       });
     }
