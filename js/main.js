@@ -50,24 +50,33 @@ MYAPP.init = function() {
 
   // Get SD's marker manager.
   this.markerManager = new SD.genmap.MarkerStaticManager({map: this.map});
+  // Get SD's Polyline manager.
+  this.polylineManager = new SD.genmap.PolylineManager({map: this.map});
 
   this.addBusStops();
+  this.drawBusRoute();
 };
 
 MYAPP.addBusStops = function() {
   // Put in our own bus stops. Check location against Google Map's.
   var busStopIcon = 'images/Bus_stop_symbol.svg';
   var routes = ["354", "358"];
-  var marker;
   for (var i = 0; i < routes.length; i++) {
     for (var j = 0; j < this.busStops[String(routes[i])].length; j++) {
       var busStop = this.busStops[String(routes[i])][j];
-      marker = this.markerManager.add({
+      var marker = this.markerManager.add({
         position: new GeoPoint(busStop.lng, busStop.lat),
         map: this.map,
         title: this.busStops[String(routes[i])][j].ID,
         icon: busStopIcon
       });
+
+      (function(marker, map) {
+        EventManager.add(marker, "click", function() {
+          // Create a SD InfoWindow.
+          map.infoWindow.open(marker, "Bus stop " + marker.title);
+        });
+      })(marker, this.map);
     }
   }
 };
@@ -90,3 +99,48 @@ MYAPP.busStopsCallback = (function(results, status) {
     }
   }
 }).bind(MYAPP);
+
+// Bus stop icon positions differ slightly from Polyline Manager's.
+MYAPP.lineToStopOffset = {lat: 0.00015, lng: 0.000015}
+
+MYAPP.drawBusRoute = function() {
+  var lineOptions = {
+    color: "#FF0000",
+    size: 3,
+    opacity: 0.5,
+    fillOpacity: 0
+  };
+
+  var points = [];
+
+  var route = this.busRoutes["354"];
+  // Push first point, the start of the route. The rest will be offsets.
+  var lat = route.start.lat + this.lineToStopOffset.lat;
+  var lng = route.start.lng + this.lineToStopOffset.lng;
+  points.push({y: lat, x: lng});
+
+  // Print 1st segment.
+  var segment = route.segments[0];
+  for (var i = 0; i < segment.length; i++) {
+    var offset = segment[i];
+    lat += offset.lat;
+    lng += offset.lng;
+    points.push({y: lat, x: lng});
+  }
+
+  this.polylineManager.add(points, lineOptions);
+
+  // Print 2nd segment.
+  points = [{y: lat, x: lng}]; // reset points.
+  var segment = route.segments[1];
+  for (var i = 0; i < segment.length; i++) {
+    var offset = segment[i];
+    lat += offset.lat;
+    lng += offset.lng;
+    points.push({y: lat, x: lng});
+  }
+
+  lineOptions.color = "#0000FF";
+
+  this.polylineManager.add(points, lineOptions);
+};
