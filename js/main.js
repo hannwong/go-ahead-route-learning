@@ -12,9 +12,8 @@ MYAPP.locations = {
 };
 
 MYAPP.init = function() {
-  var location = this.locations["Pasir Ris Interchange"];
-  // var location = this.locations["Bedok Interchange"];
-  var location = this.busStops["354"][10];
+  this.selectedRoute = this.busRoutes["354"];
+  var location = this.selectedRoute.start;
   this.lat = location.lat;
   this.lng = location.lng;
 
@@ -53,8 +52,9 @@ MYAPP.init = function() {
   // Get SD's Polyline manager.
   this.polylineManager = new SD.genmap.PolylineManager({map: this.map});
 
-  this.addBusStops();
-  this.drawBusRoute();
+  // this.addBusStops();
+  // this.drawBusRoute();
+  this.playQuiz(this.selectedRoute);
 };
 
 MYAPP.addBusStops = function() {
@@ -102,6 +102,56 @@ MYAPP.busStopsCallback = (function(results, status) {
 
 // Bus stop icon positions differ slightly from Polyline Manager's.
 MYAPP.lineToStopOffset = {lat: 0.00015, lng: 0.000015}
+
+MYAPP.playQuiz = function(route) {
+  MYAPP.quizPosition = 0;
+  // Draw bus stop icon at start of route.
+  var busStopIcon = 'images/Bus_stop_symbol.svg';
+  var marker = this.markerManager.add({
+    position: new GeoPoint(route.start.lng, route.start.lat),
+    map: this.map,
+    icon: busStopIcon
+  });
+
+  var segment = route.segments[this.quizPosition];
+  var div = document.getElementById("question");
+  if ("route" == segment.questionType) {
+    div.innerHTML = "Which route to take?";
+
+    // Display possible answers
+    var lineOptions = {
+      color: "#FF0000",
+      size: 3,
+      opacity: 0.5,
+      fillOpacity: 0
+    };
+    for (var i = 0; i < segment.answers.length; i++) {
+      var option = segment.answers[i];
+
+      // Choose appropriate constrasting color.
+      switch (i) {
+      case 0: lineOptions.color = "#FF0000"; break;
+      case 1: lineOptions.color = "#0000FF"; break;
+      case 2: lineOptions.color = "#FFFF00"; break;
+      default: lineOptions.color = "#00FF00";
+      }
+
+      var points = [];
+      var lat = route.start.lat + this.lineToStopOffset.lat;
+      var lng = route.start.lng + this.lineToStopOffset.lng;
+      points.push({y: lat, x: lng});
+
+      for (var j = 0; j < option.length; j++) {
+        var offset = option[j];
+        lat += offset.lat;
+        lng += offset.lng;
+        points.push({y: lat, x: lng});
+      }
+
+      this.polylineManager.add(points, lineOptions);
+    }
+  }
+};
 
 MYAPP.drawBusRoute = function() {
   var lineOptions = {

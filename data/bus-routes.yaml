@@ -5,7 +5,42 @@
         lng: 103.949847
 
     segments:
-        -
+        - questionType: route
+          answers:
+            -
+                - lat: 0.00049
+                  lng: 0.00009
+
+                - lat: -0.00008
+                  lng: 0.0005
+
+                - lat: -0.00003
+                  lng: 0.0005
+
+            -
+
+                - lat: 0.00040
+                  lng: 0.00012
+
+                - lat: 0.00013
+                  lng: -0.0005
+
+                - lat: 0.00017
+                  lng: -0.0005
+
+          answer:
+
+                - lat: 0.00049
+                  lng: 0.00009
+
+                - lat: -0.00008
+                  lng: 0.0005
+
+                - lat: -0.00003
+                  lng: 0.0005
+
+        - question: "Left, Straight or Right?"
+          route:
             - lat: 0.00049
               lng: 0.00009
 
@@ -15,7 +50,8 @@
             - lat: -0.00003
               lng: 0.0005
 
-        -
+        - question: "Where is the bus stop?"
+          route:
             - lat: -0.00001
               lng: 0.0002
 
