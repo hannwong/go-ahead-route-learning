@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
     <script language="javascript" src="http://code.jquery.com/jquery-2.2.3.min.js"></script>
+    <script language="javascript" src="js/bootstrap.min.js"></script>
 
     <script language="javascript" src="js/main.js"></script>
     <script language="javascript" src="js/config.js"></script>
@@ -38,6 +39,17 @@
         <div id="question" class="col-xs12"></div>
         <div id="answers" class="col-xs-12"></div>
         <div id="route" class="col-xs-12"></div>
+      </div>
+    </div>
+
+    <!-- Alert for wrong answer -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body text-center">
+            Wrong Answer!<br>Try again!
+          </div>
+        </div>
       </div>
     </div>
   </body>

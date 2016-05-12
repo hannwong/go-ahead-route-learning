@@ -183,7 +183,7 @@ MYAPP.answerQuiz = function(optionNumber, routeName) {
     console.log("You got it right!");
   }
   else {
-    console.log("You got it wrong!");
+    $('#myModal').modal('show');
   }
 };
 
