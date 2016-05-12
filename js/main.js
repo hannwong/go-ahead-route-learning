@@ -54,7 +54,7 @@ MYAPP.init = function() {
 
   // this.addBusStops();
   // this.drawBusRoute();
-  this.playQuiz(this.selectedRoute);
+  this.playQuiz("354");
 };
 
 MYAPP.addBusStops = function() {
@@ -103,7 +103,9 @@ MYAPP.busStopsCallback = (function(results, status) {
 // Bus stop icon positions differ slightly from Polyline Manager's.
 MYAPP.lineToStopOffset = {lat: 0.00015, lng: 0.000015}
 
-MYAPP.playQuiz = function(route) {
+MYAPP.playQuiz = function(routeName) {
+  route = this.busRoutes[routeName];
+
   MYAPP.quizPosition = 0;
   // Draw bus stop icon at start of route.
   var busStopIcon = 'images/Bus_stop_symbol.svg';
@@ -112,6 +114,10 @@ MYAPP.playQuiz = function(route) {
     map: this.map,
     icon: busStopIcon
   });
+
+  // Display route.
+  var div = document.getElementById("route");
+  div.innerHTML = "Route: " + routeName;
 
   var segment = route.segments[this.quizPosition];
   var div = document.getElementById("question");
@@ -125,6 +131,7 @@ MYAPP.playQuiz = function(route) {
       opacity: 0.5,
       fillOpacity: 0
     };
+    // Starting with route lines...
     for (var i = 0; i < segment.answers.length; i++) {
       var option = segment.answers[i];
 
@@ -150,6 +157,33 @@ MYAPP.playQuiz = function(route) {
 
       this.polylineManager.add(points, lineOptions);
     }
+    // Then with buttons...
+    var div = document.getElementById("answers");
+    div.innerHTML = '';
+    for (var i = 0; i < segment.answers.length; i++) {
+      var color = "#00FF00";
+      // Choose appropriate constrasting color.
+      switch (i) {
+      case 0: color = "#FF0000"; break;
+      case 1: color = "#0000FF"; break;
+      case 2: color = "#FFFF00";
+      }
+      div.innerHTML += '<div class="answer">' +
+        '<button class="answer" style="background-color: ' + color + '" ' +
+        'onclick="MYAPP.answerQuiz(' + i + ", '" + routeName + "'" + ')"></button>' +
+        '</div>';
+    }
+  }
+};
+
+MYAPP.answerQuiz = function(optionNumber, routeName) {
+  route = this.busRoutes[routeName];
+  var segment = route.segments[this.quizPosition];
+  if (optionNumber == segment.answer) {
+    console.log("You got it right!");
+  }
+  else {
+    console.log("You got it wrong!");
   }
 };
 

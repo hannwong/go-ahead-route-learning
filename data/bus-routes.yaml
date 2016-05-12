@@ -28,16 +28,7 @@
                 - lat: 0.00017
                   lng: -0.0005
 
-          answer:
-
-                - lat: 0.00049
-                  lng: 0.00009
-
-                - lat: -0.00008
-                  lng: 0.0005
-
-                - lat: -0.00003
-                  lng: 0.0005
+          answer: 0
 
         - question: "Left, Straight or Right?"
           route:
