@@ -1,3 +1,7 @@
+html, body {
+    height: 100%;
+}
+
 div#question {
     height: 2em;
     padding-top: 5%;
@@ -30,6 +34,7 @@ button.answer {
 
 div#map_canvas {
     height: 600px;
+    pointer-events: none;
 }
 
 /* iPhone 5 */
