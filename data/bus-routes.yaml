@@ -53,13 +53,18 @@
 
           answer: 1
 
-        - question: "Where is the bus stop?"
-          route:
-            - lat: -0.00001
-              lng: 0.0002
+        - questionType: stop
+          answers:
+            - lat: 1.3749
+              lng: 103.9521
 
-            - lat: 0.000025
-              lng: 0.0002
+            - lat: 1.3751
+              lng: 103.9535
 
-            - lat: 0.00054
-              lng: 0.0043
+            - lat: 1.375129
+              lng: 103.953878
+
+            - lat: 1.37516
+              lng: 103.9542
+
+          answer: 2

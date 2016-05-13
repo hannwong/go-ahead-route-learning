@@ -141,6 +141,9 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
     for (var i = 0; i < this.quizPosition; i++) {
       var priorSegment = route.segments[i];
       var paths = priorSegment.answers[priorSegment.answer];
+      if (route.segments[i].questionType != 'route') {
+        continue;
+      }
 
       if (i == this.quizPosition - 1) {
         // Will be drawing the last segment in translucent black.
@@ -171,6 +174,11 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
     var lineOptions = JSON.parse(JSON.stringify(this.lineOptions));
     lineOptions.color = "#000000";
     lineOptions.opacity = 0.3;
+    if ("stop" == segment.questionType) {
+      // "stop" type. Make bolder and more obvious; it's the only line on screen.
+      lineOptions.size = 8;
+      lineOptions.opacity = 0.5;
+    }
     this.polygons.push(this.polylineManager.add(lastSegment, lineOptions));
   }
 
@@ -235,6 +243,50 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
       case 0: color = "#FF0000"; break;
       case 1: color = "#0000FF"; break;
       case 2: color = "#FFFF00";
+      }
+      div.innerHTML += '<div class="answer">' +
+        '<button class="answer" style="background-color: ' + color + '" ' +
+        'onclick="MYAPP.answerQuiz(' + i + ", '" + routeName + "'" + ')"></button>' +
+        '</div>';
+    }
+  }
+  else if ("stop" == segment.questionType) {
+    div.innerHTML = "Where is next bus stop?";
+
+    // Display possible answers
+    var lineOptions = JSON.parse(JSON.stringify(this.lineOptions));
+    var busStopIcon = 'images/Bus_stop_symbol.svg';
+
+    // Starting with bus stops...
+    for (var i = 0; i < segment.answers.length; i++) {
+      var option = segment.answers[i];
+
+      // Choose appropriate constrasting color.
+      busStopIcon = 'images/Bus_stop_symbol_';
+      switch (i) {
+      case 0: busStopIcon += 'red'; break;
+      case 1: busStopIcon += 'blue'; break;
+      case 2: busStopIcon += 'yellow'; break;
+      default: busStopIcon += 'green';
+      }
+      busStopIcon += '.svg';
+
+      var marker = this.markerManager.add({
+        position: new GeoPoint(option.lng, option.lat),
+        map: this.map,
+        icon: busStopIcon
+      });
+    }
+    // Then with buttons...
+    var div = document.getElementById("answers");
+    div.innerHTML = '';
+    for (var i = 0; i < segment.answers.length; i++) {
+      var color = "#00FF00";
+      // Choose appropriate constrasting color.
+      switch (i) {
+      case 0: color = "#FF0000"; break;
+      case 1: color = "#0000FF"; break;
+      case 2: color = "#999900";
       }
       div.innerHTML += '<div class="answer">' +
         '<button class="answer" style="background-color: ' + color + '" ' +
