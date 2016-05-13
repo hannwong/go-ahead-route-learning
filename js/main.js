@@ -234,21 +234,7 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
       this.polygons.push(this.polylineManager.add(points, lineOptions));
     }
     // Then with buttons...
-    var div = document.getElementById("answers");
-    div.innerHTML = '';
-    for (var i = 0; i < segment.answers.length; i++) {
-      var color = "#00FF00";
-      // Choose appropriate constrasting color.
-      switch (i) {
-      case 0: color = "#FF0000"; break;
-      case 1: color = "#0000FF"; break;
-      case 2: color = "#FFFF00";
-      }
-      div.innerHTML += '<div class="answer">' +
-        '<button class="answer" style="background-color: ' + color + '" ' +
-        'onclick="MYAPP.answerQuiz(' + i + ", '" + routeName + "'" + ')"></button>' +
-        '</div>';
-    }
+    this.displayAnswerButtons(routeName, quizPosition);
   }
   else if ("stop" == segment.questionType) {
     div.innerHTML = "Where is next bus stop?";
@@ -278,21 +264,28 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
       });
     }
     // Then with buttons...
-    var div = document.getElementById("answers");
-    div.innerHTML = '';
-    for (var i = 0; i < segment.answers.length; i++) {
-      var color = "#00FF00";
-      // Choose appropriate constrasting color.
-      switch (i) {
-      case 0: color = "#FF0000"; break;
-      case 1: color = "#0000FF"; break;
-      case 2: color = "#999900";
-      }
-      div.innerHTML += '<div class="answer">' +
-        '<button class="answer" style="background-color: ' + color + '" ' +
-        'onclick="MYAPP.answerQuiz(' + i + ", '" + routeName + "'" + ')"></button>' +
-        '</div>';
+    this.displayAnswerButtons(routeName, quizPosition);
+  }
+};
+
+MYAPP.displayAnswerButtons = function(routeName, quizPosition) {
+  var route = this.busRoutes[routeName];
+  var segment = route.segments[this.quizPosition];
+
+  var div = document.getElementById("answers");
+  div.innerHTML = '';
+  for (var i = 0; i < segment.answers.length; i++) {
+    var color = "#00FF00";
+    // Choose appropriate constrasting color.
+    switch (i) {
+    case 0: color = "#FF0000"; break;
+    case 1: color = "#0000FF"; break;
+    case 2: color = "#FFFF00";
     }
+    div.innerHTML += '<div class="answer">' +
+      '<button class="answer" style="background-color: ' + color + '" ' +
+      'onclick="MYAPP.answerQuiz(' + i + ", '" + routeName + "'" + ')"></button>' +
+      '</div>';
   }
 };
 
