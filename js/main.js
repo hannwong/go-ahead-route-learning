@@ -136,7 +136,7 @@ MYAPP.busStopsCallback = (function(results, status) {
 MYAPP.lineToStopOffset = {lat: 0.00015, lng: 0.000015}
 
 MYAPP.playQuiz = function(routeName) {
-  MYAPP.quizPosition = 0;
+  this.quizPosition = 0;
   this.playQuizQuestion(routeName, this.quizPosition);
 };
 
@@ -160,8 +160,10 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
     for (var i = 0; i < this.quizPosition; i++) {
       var priorSegment = route.segments[i];
       var paths = priorSegment.answers[priorSegment.answer];
-      if (route.segments[i].questionType != 'route') {
-        continue;
+      if (route.segments[i].questionType == 'stop') {
+        // "(bus) stop" question type has an "advance" attribute instead
+        //   of a "correct route".
+        paths = priorSegment.advance;
       }
 
       if (i == this.quizPosition - 1) {
@@ -236,8 +238,8 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
       switch (colorSelected) {
       case 0: lineOptions.color = "#FF0000"; break;
       case 1: lineOptions.color = "#0000FF"; break;
-      case 2: lineOptions.color = "#FFFF00"; break;
-      default: lineOptions.color = "#00FF00";
+      case 2: lineOptions.color = "#00ff00"; break;
+      default: lineOptions.color = "#bbbb00";
       }
 
       var points = [];
@@ -276,8 +278,8 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
       switch (colorSelected) {
       case 0: busStopIcon += 'red'; break;
       case 1: busStopIcon += 'blue'; break;
-      case 2: busStopIcon += 'yellow'; break;
-      default: busStopIcon += 'green';
+      case 2: busStopIcon += 'green'; break;
+      default: busStopIcon += 'yellow';
       }
       busStopIcon += '.svg';
 
@@ -299,12 +301,12 @@ MYAPP.displayAnswerButtons = function(routeName, quizPosition) {
   var div = document.getElementById("answers");
   div.innerHTML = '';
   for (var i = 0; i < segment.answers.length; i++) {
-    var color = "#00FF00";
+    var color = "#bbbb00";
     // Choose appropriate constrasting color.
     switch (i) {
     case 0: color = "#FF0000"; break;
     case 1: color = "#0000FF"; break;
-    case 2: color = "#FFFF00";
+    case 2: color = "#00ff00";
     }
     div.innerHTML += '<div class="answer">' +
       '<button class="answer" style="background-color: ' + color + '" ' +

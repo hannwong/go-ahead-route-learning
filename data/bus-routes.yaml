@@ -68,3 +68,38 @@
               lng: 103.9542
 
           answer: 2
+
+          advance:
+            - lat: 0.00031
+              lng: 0.0025
+
+        - questionType: route
+          answers:
+            -
+                - lat: 0.00005
+                  lng: 0.0007
+
+                - lat: -0.006
+                  lng: 0.0003
+
+            -
+                - lat: 0.00003
+                  lng: 0.0005
+
+                - lat: 0.0001
+                  lng: 0.0005
+
+                - lat: 0.00002
+                  lng: 0.0003
+
+                - lat: 0.00002
+                  lng: 0.0003
+
+            -
+                - lat: 0.00005
+                  lng: 0.00064
+
+                - lat: 0.006
+                  lng: -0.00033
+
+          answer: 2
