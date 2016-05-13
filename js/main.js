@@ -15,6 +15,25 @@ MYAPP.locations = {
 // To be removed one by one. SD doesn't have a "clear all".
 MYAPP.polygons = [];
 
+// generate a random number 0 (inclusive) to n (exclusive)
+MYAPP.randNumber = function(n) {
+  return Math.floor((Math.random() * n));
+};
+
+// Returns a random color. Colors always in same (contrasting color) order.
+// If only 2 options, red and blue will be used. If 3, then red, blue, yellow.
+// And so on.
+// Assumption: this.colorAnswerMapping is already reset to empty array.
+MYAPP.chooseRandomColor = function (numberOfAnswerOptions, answerOptionNumber) {
+  var colorSelected = this.randNumber(numberOfAnswerOptions);
+  while (this.colorAnswerMapping.hasOwnProperty(String(colorSelected))) {
+    // Get a color that isn't already used.
+    colorSelected = this.randNumber(numberOfAnswerOptions);
+  }
+  this.colorAnswerMapping[String(colorSelected)] = answerOptionNumber;
+  return colorSelected;
+};
+
 // Standard route line style
 MYAPP.lineOptions = {
   color: "#FF0000",
@@ -170,7 +189,6 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
 
   // Draw lastSegment
   if (lastSegment.length > 0) {
-    console.log(lastSegment);
     var lineOptions = JSON.parse(JSON.stringify(this.lineOptions));
     lineOptions.color = "#000000";
     lineOptions.opacity = 0.3;
@@ -207,11 +225,15 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
     var lineOptions = JSON.parse(JSON.stringify(this.lineOptions));
 
     // Starting with route lines...
+    this.colorAnswerMapping = []; // Color to answer option mapping.
     for (var i = 0; i < segment.answers.length; i++) {
       var option = segment.answers[i];
 
-      // Choose appropriate constrasting color.
-      switch (i) {
+      // Randomize the color representation.
+      // Colored buttons are always in same (constrasting color) order.
+      // Representation of answers can change.
+      var colorSelected = this.chooseRandomColor(segment.answers.length, i);
+      switch (colorSelected) {
       case 0: lineOptions.color = "#FF0000"; break;
       case 1: lineOptions.color = "#0000FF"; break;
       case 2: lineOptions.color = "#FFFF00"; break;
@@ -244,12 +266,14 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
     var busStopIcon = 'images/Bus_stop_symbol.svg';
 
     // Starting with bus stops...
+    this.colorAnswerMapping = []; // Color to answer option mapping.
     for (var i = 0; i < segment.answers.length; i++) {
       var option = segment.answers[i];
 
-      // Choose appropriate constrasting color.
+      // Randomize the color representation.
+      var colorSelected = this.chooseRandomColor(segment.answers.length, i);
       busStopIcon = 'images/Bus_stop_symbol_';
-      switch (i) {
+      switch (colorSelected) {
       case 0: busStopIcon += 'red'; break;
       case 1: busStopIcon += 'blue'; break;
       case 2: busStopIcon += 'yellow'; break;
@@ -292,7 +316,7 @@ MYAPP.displayAnswerButtons = function(routeName, quizPosition) {
 MYAPP.answerQuiz = function(optionNumber, routeName) {
   route = this.busRoutes[routeName];
   var segment = route.segments[this.quizPosition];
-  if (optionNumber == segment.answer) {
+  if (this.colorAnswerMapping[String(optionNumber)] == segment.answer) {
     this.quizPosition++;
     this.playQuizQuestion(routeName, this.quizPosition);
   }
