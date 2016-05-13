@@ -1,0 +1,7 @@
+# Contains needed tools, like js-yaml.
+/node_modules
+
+# Bootstrap
+/bootstrap/css
+/bootstrap/js
+

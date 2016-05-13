@@ -6,6 +6,7 @@
   },
   "scripts": {
     "data2json": "echo 'MYAPP.busStops =' > js/bus-stops.js && js-yaml data/bus-stops.yaml >> js/bus-stops.js && echo ';' >> js/bus-stops.js && echo 'MYAPP.busRoutes =' > js/bus-routes.js && js-yaml data/bus-routes.yaml >> js/bus-routes.js && echo ';' >> js/bus-routes.js",
-    "deploy-bootstrap": "cp bootstrap/css/bootstrap.min.css css && cp bootstrap/js/bootstrap.min.js js"
+    "deploy-bootstrap": "cp bootstrap/css/bootstrap.min.css css && cp bootstrap/js/bootstrap.min.js js",
+    "publish": "git branch -f gh-pages && git checkout gh-pages && npm run data2json && npm run deploy-bootstrap && cp js/config.js.sample js/config.js && cp .gitignore.publish .gitignore && git add js/bus-routes.js js/config.js js/bootstrap.min.js js/bus-stops.js css/bootstrap.min.css && git add .gitignore && git commit -m \"Publish\" && git push -f origin gh-pages"
   }
 }

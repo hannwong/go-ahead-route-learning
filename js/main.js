@@ -142,6 +142,11 @@ MYAPP.playQuiz = function(routeName) {
 
 MYAPP.playQuizQuestion = function(routeName, quizPosition) {
   var route = this.busRoutes[routeName];
+  if (this.quizPosition == route.segments.length) {
+    document.getElementById("question").innerHTML = "Route complete!";
+    document.getElementById("answers").innerHTML = "";
+    return;
+  }
   var segment = route.segments[this.quizPosition];
 
   var startLng = route.start.lng;
