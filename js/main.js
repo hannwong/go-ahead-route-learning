@@ -42,6 +42,16 @@ MYAPP.lineOptions = {
   fillOpacity: 0
 };
 
+MYAPP.loadBusRoute = function() {
+  $.ajax({
+    url: "js/bus-routes.js",
+    dataType: "script",
+    success: (function() {
+      this.init();
+    }).bind(this)
+  });
+};
+
 MYAPP.init = function() {
   this.selectedRoute = this.busRoutes["354"];
   var location = this.selectedRoute.start;
