@@ -34,6 +34,21 @@ MYAPP.chooseRandomColor = function (numberOfAnswerOptions, answerOptionNumber) {
   return colorSelected;
 };
 
+MYAPP.getUrlParam = function(sParam) {
+  var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+
+  for (i = 0; i < sURLVariables.length; i++) {
+    sParameterName = sURLVariables[i].split('=');
+
+    if (sParameterName[0] === sParam) {
+      return sParameterName[1] === undefined ? true : sParameterName[1];
+    }
+  }
+};
+
 // Standard route line style
 MYAPP.lineOptions = {
   color: "#FF0000",
@@ -44,7 +59,7 @@ MYAPP.lineOptions = {
 
 MYAPP.loadBusRoute = function() {
   $.ajax({
-    url: "js/bus-routes.js",
+    url: "js/bus-routes/" + this.getUrlParam("route") + ".js",
     dataType: "script",
     success: (function() {
       this.init();
@@ -53,7 +68,7 @@ MYAPP.loadBusRoute = function() {
 };
 
 MYAPP.init = function() {
-  this.selectedRoute = this.busRoutes["354"];
+  this.selectedRoute = this.busRoute;
   var location = this.selectedRoute.start;
   this.lat = location.lat;
   this.lng = location.lng;
@@ -99,6 +114,7 @@ MYAPP.init = function() {
   this.playQuiz("354");
 };
 
+// TODO: File under development build. Unused in production, for now.
 MYAPP.addBusStops = function() {
   // Put in our own bus stops. Check location against Google Map's.
   var busStopIcon = 'images/Bus_stop_symbol.svg';
@@ -151,7 +167,7 @@ MYAPP.playQuiz = function(routeName) {
 };
 
 MYAPP.playQuizQuestion = function(routeName, quizPosition) {
-  var route = this.busRoutes[routeName];
+  var route = this.busRoute;
   if (this.quizPosition == route.segments.length) {
     document.getElementById("question").innerHTML = "Route complete!";
     document.getElementById("answers").innerHTML = "";
@@ -310,7 +326,7 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
 };
 
 MYAPP.displayAnswerButtons = function(routeName, quizPosition) {
-  var route = this.busRoutes[routeName];
+  var route = this.busRoute;
   var segment = route.segments[this.quizPosition];
 
   var div = document.getElementById("answers");
@@ -331,7 +347,7 @@ MYAPP.displayAnswerButtons = function(routeName, quizPosition) {
 };
 
 MYAPP.answerQuiz = function(optionNumber, routeName) {
-  route = this.busRoutes[routeName];
+  route = this.busRoute;
   var segment = route.segments[this.quizPosition];
   if (this.colorAnswerMapping[String(optionNumber)] == segment.answer) {
     this.quizPosition++;
@@ -352,7 +368,7 @@ MYAPP.drawBusRoute = function() {
 
   var points = [];
 
-  var route = this.busRoutes["354"];
+  var route = this.busRoute;
   // Push first point, the start of the route. The rest will be offsets.
   var lat = route.start.lat + this.lineToStopOffset.lat;
   var lng = route.start.lng + this.lineToStopOffset.lng;
