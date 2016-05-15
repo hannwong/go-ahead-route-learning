@@ -68,14 +68,14 @@ MYAPP.loadBusRoute = function() {
     success: (function() {
       this.init();
     }).bind(this),
-    error: (function(jqXHR, textStatus, errorThrown) {
-      if (errorThrown == "File not found") {
+    statusCode: {
+      404: (function() {
         $("#question").html("Route " + "<b><u>" + this.getUrlParam("route") + "</u></b>" +
                             " is not in our system.<br>" +
                             "Please choose another route.<br>" +
                             "Or tell us to include this route!");
-      }
-    }).bind(this)
+      }).bind(this)
+    }
   });
 };
 
