@@ -14,8 +14,10 @@ div#answers {
 
 div#route {
     background-color: #ddffdd;
-    height: 1em;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3em;
 }
 
 div.answer {

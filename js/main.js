@@ -58,6 +58,10 @@ MYAPP.lineOptions = {
 };
 
 MYAPP.loadBusRoute = function() {
+  if (typeof this.getUrlParam("route") == 'undefined') {
+    $("#question").text("No route specified! Specify a route in the URL, like 'http://<hostname>/index.html?route=354'.");
+    return;
+  }
   $.ajax({
     url: "js/bus-routes/" + this.getUrlParam("route") + ".js",
     dataType: "script",
@@ -247,8 +251,8 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
   }
 
   // Display route.
-  var div = document.getElementById("route");
-  div.innerHTML = "Route: " + routeName;
+  $("#route > div").html("Route: " + routeName + "<br>" +
+                        "Segment: " + quizPosition);
 
   var div = document.getElementById("question");
   if ("route" == segment.questionType) {
