@@ -123,7 +123,7 @@ MYAPP.init = function() {
 
   // this.addBusStops();
   // this.drawBusRoute();
-  this.playQuiz("354");
+  this.playQuiz(this.getUrlParam("route"));
 };
 
 // TODO: File under development build. Unused in production, for now.
