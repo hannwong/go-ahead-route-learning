@@ -59,7 +59,7 @@ MYAPP.lineOptions = {
 
 MYAPP.loadBusRoute = function() {
   if (typeof this.getUrlParam("route") == 'undefined') {
-    $("#question").html("No route specified!<br>Specify a route in the URL, like<br>'http://&lt;hostname&gt;/index.html?route=354'.");
+    $("#question").html("No route specified!<br>Specify a route in the URL, like<br>'http://&lt;hostname&gt;/?route=354'.");
     return;
   }
   $.ajax({
