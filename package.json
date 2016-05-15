@@ -9,7 +9,7 @@
     "data2json": "echo 'MYAPP.busStops =' > js/bus-stops.js && js-yaml data/bus-stops.yaml >> js/bus-stops.js && echo ';' >> js/bus-stops.js",
 
     "//": "Converts data/bus-routes.yaml into separate bus routes in js/bus-routes .",
-    "deploy-busroutes": "./build-tools/deploy-bus-routes.js",
+    "deploy-busroutes": "mkdir -p js/bus-routes && ./build-tools/deploy-bus-routes.js",
 
     "//": "Deploys Bootstrap css and js.",
     "deploy-bootstrap": "cp bootstrap/css/bootstrap.min.css css && cp bootstrap/js/bootstrap.min.js js",
