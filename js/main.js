@@ -59,7 +59,7 @@ MYAPP.lineOptions = {
 
 MYAPP.loadBusRoute = function() {
   if (typeof this.getUrlParam("route") == 'undefined') {
-    $("#question").text("No route specified! Specify a route in the URL, like 'http://<hostname>/index.html?route=354'.");
+    $("#question").html("No route specified!<br>Specify a route in the URL, like<br>'http://&lt;hostname&gt;/index.html?route=354'.");
     return;
   }
   $.ajax({
@@ -67,6 +67,14 @@ MYAPP.loadBusRoute = function() {
     dataType: "script",
     success: (function() {
       this.init();
+    }).bind(this),
+    error: (function(jqXHR, textStatus, errorThrown) {
+      if (errorThrown == "File not found") {
+        $("#question").html("Route " + "<b><u>" + this.getUrlParam("route") + "</u></b>" +
+                            " is not in our system.<br>" +
+                            "Please choose another route.<br>" +
+                            "Or tell us to include this route!");
+      }
     }).bind(this)
   });
 };
