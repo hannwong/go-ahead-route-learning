@@ -246,7 +246,7 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
   }
 
   var latlng = new GeoPoint(startLng, startLat);
-  this.map.setCenter(latlng, 13);
+  this.map.panTo(latlng);
 
   if (0 == quizPosition) {
     // Draw bus stop icon at start of route.
@@ -260,7 +260,7 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
 
   // Display route.
   $("#route > div").html("Route: " + routeName + "<br>" +
-                        "Segment: " + quizPosition);
+                         "Segment: " + quizPosition);
 
   var div = document.getElementById("question");
   if ("route" == segment.questionType) {
