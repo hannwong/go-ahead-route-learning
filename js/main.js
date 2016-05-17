@@ -59,7 +59,7 @@ MYAPP.lineOptions = {
 
 MYAPP.loadBusRoute = function() {
   if (typeof this.getUrlParam("route") == 'undefined') {
-    $("#question").html("No route specified!<br>Specify a route in the URL, like<br>'http://&lt;hostname&gt;/?route=354'.");
+    $("#question > div").html("No route specified!<br>Specify a route in the URL, like<br>'http://&lt;hostname&gt;/?route=354'.");
     return;
   }
   $.ajax({
@@ -70,7 +70,7 @@ MYAPP.loadBusRoute = function() {
     }).bind(this),
     statusCode: {
       404: (function() {
-        $("#question").html("Route " + "<b><u>" + this.getUrlParam("route") + "</u></b>" +
+        $("#question > div").html("Route " + "<b><u>" + this.getUrlParam("route") + "</u></b>" +
                             " is not in our system.<br>" +
                             "Please choose another route.<br>" +
                             "Or tell us to include this route!");
@@ -181,8 +181,8 @@ MYAPP.playQuiz = function(routeName) {
 MYAPP.playQuizQuestion = function(routeName, quizPosition) {
   var route = this.busRoute;
   if (this.quizPosition == route.segments.length) {
-    document.getElementById("question").innerHTML = "Route complete!";
-    document.getElementById("answers").innerHTML = "";
+    $("#question > div").html("Route complete!");
+    $("#answers > div").innerHTML = "";
     return;
   }
   var segment = route.segments[this.quizPosition];
@@ -262,9 +262,9 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
   $("#route > div").html("Route: " + routeName + "<br>" +
                          "Segment: " + quizPosition);
 
-  var div = document.getElementById("question");
+  var div = $("#question > div");
   if ("route" == segment.questionType) {
-    div.innerHTML = "Which route to take?";
+    div.html("Which route to take?");
 
     // Display possible answers
     var lineOptions = JSON.parse(JSON.stringify(this.lineOptions));
@@ -304,7 +304,7 @@ MYAPP.playQuizQuestion = function(routeName, quizPosition) {
     this.displayAnswerButtons(routeName, quizPosition);
   }
   else if ("stop" == segment.questionType) {
-    div.innerHTML = "Where is next bus stop?";
+    div.html("Where is next bus stop?");
 
     // Display possible answers
     var lineOptions = JSON.parse(JSON.stringify(this.lineOptions));
@@ -341,8 +341,9 @@ MYAPP.displayAnswerButtons = function(routeName, quizPosition) {
   var route = this.busRoute;
   var segment = route.segments[this.quizPosition];
 
-  var div = document.getElementById("answers");
-  div.innerHTML = '';
+  var div = $("#answers div");
+  div.html('');
+  var answers = '';
   for (var i = 0; i < segment.answers.length; i++) {
     var color = "#bbbb00";
     // Choose appropriate constrasting color.
@@ -351,11 +352,12 @@ MYAPP.displayAnswerButtons = function(routeName, quizPosition) {
     case 1: color = "#0000FF"; break;
     case 2: color = "#00ff00";
     }
-    div.innerHTML += '<div class="answer">' +
+    answers += '<div class="answer">' +
       '<button class="answer" style="background-color: ' + color + '" ' +
       'onclick="MYAPP.answerQuiz(' + i + ", '" + routeName + "'" + ')"></button>' +
       '</div>';
   }
+  div.html(answers);
 };
 
 MYAPP.answerQuiz = function(optionNumber, routeName) {
