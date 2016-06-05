@@ -12,6 +12,7 @@
 
     <!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAflP6BsBmVPmTYaWh1byTWNC5yHQwYFmI&libraries=places"></script>-->
 
+    <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
@@ -33,11 +34,14 @@
 
   <body onload="initialize()">
     <div cass="container">
+      <!-- Single row, single column. To reflow when landscape. -->
       <div class="row">
-        <div class="map_container col-xs-12"><div id="map_canvas"></div></div>
-        <div id="question" class="col-xs-12"><div></div></div>
-        <div id="answers" class="col-xs-12"><div></div></div>
-        <div id="route" class="col-xs-12"><div></div></div>
+        <div class="col-xs-12 main_container">
+          <div class="map_container"><div id="map_canvas"></div></div>
+          <div id="question"><div></div></div>
+          <div id="answers"><div></div></div>
+          <div id="route"><div></div></div>
+        </div>
       </div>
     </div>
 

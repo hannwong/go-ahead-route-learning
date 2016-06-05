@@ -2,7 +2,8 @@
   "name": "go-ahead-route-learning",
   "version": "0.0.0",
   "devDependencies": {
-    "js-yaml": "^3.6.0"
+    "js-yaml": "^3.6.0",
+    "normalize.css": "^4.1.1"
   },
   "scripts": {
     "//": "TODO: File under development build. Unused in production, for now.",
@@ -11,8 +12,8 @@
     "//": "Converts data/bus-routes.yaml into separate bus routes in js/bus-routes .",
     "deploy-busroutes": "mkdir -p js/bus-routes && ./build-tools/deploy-bus-routes.js",
 
-    "//": "Deploys Bootstrap css and js.",
-    "deploy-bootstrap": "cp bootstrap/css/bootstrap.min.css css && cp bootstrap/js/bootstrap.min.js js",
+    "//": "Deploys Bootstrap css and js. Deploys normalize.css",
+    "deploy-bootstrap": "cp bootstrap/css/bootstrap.min.css node_modules/normalize.css/normalize.css css && cp bootstrap/js/bootstrap.min.js js",
 
     "//": "Publishes to gh-pages.",
     "publish": "git branch -f gh-pages && git checkout gh-pages && npm run deploy-busroutes && npm run deploy-bootstrap && cp js/config.js.sample js/config.js && cp .gitignore.publish .gitignore && git add js/bus-routes js/config.js js/bootstrap.min.js css/bootstrap.min.css && git add .gitignore && git commit -m \"Publish\" && git push -f origin gh-pages"
