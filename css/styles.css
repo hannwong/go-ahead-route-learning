@@ -69,14 +69,14 @@ div#map_canvas {
     background-color: #CCCCCC;
     height: 50vh;
     width: 100vw;
-    max-width: 600px;
-    max-height: 600px;
+    max-width: 768px;
+    max-height: 768px;
     padding: 0;
     pointer-events: none;
 }
 
 /* iPhone 5 landscape mode */
-@media screen and (max-width: 568px) and (max-height: 320px) {
+@media screen and (max-width: 1024px) and (orientation: landscape) {
     /* Map on left half, the rest on right half. */
     div.map_container {
         width: 50vw;
