@@ -79,6 +79,63 @@ MYAPP.loadBusRoute = function() {
   });
 };
 
+MYAPP.reloadMap = function() {
+  // Wait 500 ms before checking for size changes.
+  setTimeout((function () {
+    var newSize = { width: $("#map_canvas").width(), height: $("#map_canvas").height() };
+    if (this.mapSize.width != newSize.width || this.mapSize.height != newSize.height) {
+      this.mapSize = newSize;
+
+      this.map.resizeViewport(newSize.width, newSize.height);
+
+      // Bug in SD when resizing map!
+      //   Have to wait a while before recentering map.
+      //   Whether we refresh first or later, or we don't refresh, same problem.
+      //   Displaces id_viewport_layer. top is 128px, left is -127.5px.
+      // this.map.setCenter(center, 13);
+
+      // Wait a while before recentering map. Minimum of 100ms.
+      setTimeout((function () {
+        this.playQuizQuestion(this.getUrlParam("route"), this.quizPosition);
+        this.map.refresh();
+
+        // Remove hardcoded dimensions from SD
+        $("#map_canvas").css('width', '');
+        $("#map_canvas").css('height', '');
+      }).bind(this), 100);
+    }
+  }).bind(MYAPP), 100);
+
+};
+
+MYAPP.loadMap = function() {
+  $("#map_canvas").empty();
+
+  var latlng = new GeoPoint(this.lng, this.lat);
+  // Generate SD map.
+  var myOptions = {
+    zoom: 13,
+    center: latlng,
+    showCopyright: false,
+    draggable: false
+  };
+  this.map = new SD.genmap.Map(
+    document.getElementById("map_canvas"),
+    myOptions);
+
+  // Get SD's marker manager.
+  this.markerManager = new SD.genmap.MarkerStaticManager({map: this.map});
+  // Get SD's Polyline manager.
+  this.polylineManager = new SD.genmap.PolylineManager({map: this.map});
+
+  // Store current size of map.
+  this.mapSize = { width: $("#map_canvas").width(), height: $("#map_canvas").height() };
+
+  // Remove hardcoded dimensions from SD
+  $("#map_canvas").css('width', '');
+  $("#map_canvas").css('height', '');
+};
+
 MYAPP.init = function() {
   this.selectedRoute = this.busRoute;
   var location = this.selectedRoute.start;
@@ -103,23 +160,9 @@ MYAPP.init = function() {
     service.nearbySearch(request, this.busStopsCallback);
   }
 
-  var latlng = new GeoPoint(this.lng, this.lat);
+  this.loadMap();
 
-  // Generate SD map.
-  var myOptions = {
-    zoom: 13,
-    center: latlng,
-    showCopyright: false,
-    draggable: false
-  };
-  this.map = new SD.genmap.Map(
-    document.getElementById("map_canvas"),
-    myOptions);
-
-  // Get SD's marker manager.
-  this.markerManager = new SD.genmap.MarkerStaticManager({map: this.map});
-  // Get SD's Polyline manager.
-  this.polylineManager = new SD.genmap.PolylineManager({map: this.map});
+  window.addEventListener('orientationchange', this.reloadMap);
 
   // this.addBusStops();
   // this.drawBusRoute();
