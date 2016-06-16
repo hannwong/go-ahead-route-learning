@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "devDependencies": {
     "js-yaml": "^3.6.0",
-    "normalize.css": "^4.1.1"
+    "normalize.css": "^4.1.1",
+    "brim": "^1.0.11"
   },
   "scripts": {
     "//": "TODO: File under development build. Unused in production, for now.",
@@ -15,7 +16,16 @@
     "//": "Deploys Bootstrap css and js. Deploys normalize.css",
     "deploy-bootstrap": "cp bootstrap/css/bootstrap.min.css node_modules/normalize.css/normalize.css css && cp bootstrap/js/bootstrap.min.js js",
 
+    "//": "Deploys brim and dependencies",
+    "deploy-brim": "cp node_modules/brim/dist/brim.min.js js && cp node_modules/brim/node_modules/scream/dist/scream.js js",
+
+    "//": "Deploys all dependencies",
+    "deploy-dependencies": "npm run deploy-brim && npm run deploy-bootstrap",
+
+    "//": "Deploys everything",
+    "deploy-all": "npm run deploy-dependencies && npm run deploy-busroutes",
+
     "//": "Publishes to gh-pages.",
-    "publish": "git branch -f gh-pages && git checkout gh-pages && npm run deploy-busroutes && npm run deploy-bootstrap && cp js/config.js.sample js/config.js && cp .gitignore.publish .gitignore && git add js/bus-routes js/config.js js/bootstrap.min.js css/bootstrap.min.css && git add .gitignore && git commit -m \"Publish\" && git push -f origin gh-pages"
+    "publish": "git branch -f gh-pages && git checkout gh-pages && npm run deploy-all && cp js/config.js.sample js/config.js && cp .gitignore.publish .gitignore && git add js/bus-routes js/config.js js/bootstrap.min.js css/bootstrap.min.css && git add .gitignore && git commit -m \"Publish\" && git push -f origin gh-pages"
   }
 }

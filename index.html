@@ -23,6 +23,25 @@
     <script language="javascript" src="js/config.js"></script>
     <!--<script language="javascript" src="js/bus-stops.js"></script>-->
 
+    <script src="js/scream.js"></script>
+    <script src="js/brim.min.js"></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function () {
+        var scream, brim;
+
+        scream = gajus.Scream({
+          width: {
+            portrait: 320,
+            landscape: 640
+          }
+        });
+
+        brim = gajus.Brim({
+          viewport: scream
+        });
+      });
+    </script>
+
     <script type="text/javascript">
 
       function initialize() {
@@ -33,27 +52,33 @@
   </head>
 
   <body onload="initialize()">
-    <div cass="container">
-      <!-- Single row, single column. To reflow when landscape. -->
-      <div class="row">
-        <div class="col-xs-12 main_container">
-          <div class="map_container"><div id="map_canvas"></div></div>
-          <div id="question"><div></div></div>
-          <div id="answers"><div></div></div>
-          <div id="route"><div></div></div>
+    <div id="brim-main">
+      <div class="container">
+        <!-- Single row, single column. To reflow when landscape. -->
+        <div class="row">
+          <div class="col-xs-12 main_container">
+            <div class="map_container"><div id="map_canvas"></div></div>
+            <div id="question"><div></div></div>
+            <div id="answers"><div></div></div>
+            <div id="route"><div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alert for wrong answer -->
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-body text-center">
+              Wrong Answer!<br>Try again!
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Alert for wrong answer -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-body text-center">
-            Wrong Answer!<br>Try again!
-          </div>
-        </div>
-      </div>
+    <div id="brim-mask">
+      <p>Mask element</p>
     </div>
   </body>
 
